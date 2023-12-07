@@ -6,7 +6,7 @@ function App() {
   const [activePlayer, setActivePlayer] = useState("X");
   const [gameTurns, setGameturns] = useState([]);
 
-  function handleSelectSquare(colIndex, rowIndex) {
+  function handleSelectSquare(rowIndex, colIndex) {
     setActivePlayer((currActivePlayer) =>
       currActivePlayer === "X" ? "O" : "X"
     );
