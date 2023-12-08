@@ -1,6 +1,6 @@
 
 
-export default function GameBoard({ onSelectSquare, board }) {
+export default function GameBoard({ onSelectSquare, board}) {
 
 
   return (
