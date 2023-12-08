@@ -25,16 +25,3 @@ export default function GameBoard({ onSelectSquare, board }) {
   );
 }
 
-  /* 
-  const [gameBoard, setGameBoard] = useState(initialBoard);
-
-   function handleSelectSquare(rowIndex, colIndex) {
-    setGameBoard((prevGameBoard) => {
-      const updatedBoard = [...prevGameBoard.map((innerArr) => [...innerArr])];
-      updatedBoard[rowIndex][colIndex] = activePlayerSymbol;
-      return updatedBoard;
-    });
-
-    onSelectSquare();
-  } */
-
