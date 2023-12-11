@@ -9,34 +9,29 @@ const PLAYERS = {
   O: "Player 2",
 };
 
-const INITIAL_GAME_BOARD = [
-  [null, null, null],
-  [null, null, null],
-  [null, null, null],
-];
-
 function App() {
-  const [names, setNames] = useState(PLAYERS);
+  const [players, setPlayers] = useState(PLAYERS);
 
-  function handleNameChange(symbol, newName) {
-    setNames((currNames) => {
+  function handleNameChange(symbol, newPlayer) {
+    setPlayers((prevPlayers) => {
       return {
-        ...currNames,
-        [symbol]: newName,
+        ...prevPlayers,
+        [symbol]: newPlayer,
       };
     });
   }
+
   return (
     <main>
       <div id="game-container">
         <ol id="players">
           <Player
-            initialNames={PLAYERS.X}
+            initialName={PLAYERS.X}
             symbol="X"
             onNameChange={handleNameChange}
           />
           <Player
-            initialNames={PLAYERS.O}
+            initialName={PLAYERS.O}
             symbol="O"
             onNameChange={handleNameChange}
           />
