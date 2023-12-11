@@ -9,8 +9,16 @@ const PLAYERS = {
   O: "Player 2",
 };
 
+const INITIAL_GAME_BOARD = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
+
 function App() {
   const [players, setPlayers] = useState(PLAYERS);
+  const [gameBoard, setGameBoard] = useState(INITIAL_GAME_BOARD);
+
 
   function handleNameChange(symbol, newPlayer) {
     setPlayers((prevPlayers) => {
@@ -38,7 +46,7 @@ function App() {
         </ol>
         <GameBoard />
         <Log />
-        <GameOver />
+        <GameOver board={gameBoard} />
       </div>
     </main>
   );
