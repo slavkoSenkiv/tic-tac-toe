@@ -1,13 +1,19 @@
 export default function GameBoard( { board }) {
   return (
-    <div>
-      {board.map((row, rowIndex) => (
-        <ol key={rowIndex}>
-          {row.map((col, colIndex) => (
-            <li key={colIndex}>{board[row][col]}</li>
-          ))}
-        </ol>
-      ))}
-    </div>
+    <ol id="game-board">
+      <li>
+        {board.map((row, rowIndex) => (
+          <ol key={rowIndex}>
+            {row.map((playerSymbol, colIndex) => (
+              <li key={colIndex}>
+                <button>
+                  {playerSymbol}
+                </button>
+              </li>
+            ))}
+          </ol>
+        ))}
+      </li>
+    </ol>
   )
 }

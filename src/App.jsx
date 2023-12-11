@@ -44,9 +44,9 @@ function App() {
             onNameChange={handleNameChange}
           />
         </ol>
-        <GameBoard />
+        <GameBoard  board={gameBoard}/>
         <Log />
-        <GameOver board={gameBoard} />
+        <GameOver />
       </div>
     </main>
   );
