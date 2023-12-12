@@ -18,7 +18,7 @@ const INITIAL_GAME_BOARD = [
 function App() {
   const [players, setPlayers] = useState(PLAYERS);
   const [gameBoard, setGameBoard] = useState(INITIAL_GAME_BOARD);
-
+  const [activePlayer, setActivePlayer] = useState("X");
 
   function handleNameChange(symbol, newPlayer) {
     setPlayers((prevPlayers) => {
@@ -29,22 +29,30 @@ function App() {
     });
   }
 
+  function handleSelectSquare() {
+    setActivePlayer((currActivePlayer) => {
+      return currActivePlayer === "X" ? "O" : "X";
+    });
+  }
+
   return (
     <main>
       <div id="game-container">
-        <ol id="players">
+        <ol id="players" className="highlight-player">
           <Player
             initialName={PLAYERS.X}
             symbol="X"
             onNameChange={handleNameChange}
+            isActive={activePlayer === "X"}
           />
           <Player
             initialName={PLAYERS.O}
             symbol="O"
             onNameChange={handleNameChange}
+            isActive={activePlayer === "O"}
           />
         </ol>
-        <GameBoard  board={gameBoard}/>
+        <GameBoard board={gameBoard} onSelectSquare={handleSelectSquare} />
         <Log />
         <GameOver />
       </div>
