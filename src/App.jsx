@@ -3,6 +3,7 @@ import GameBoard from "./components/GameBoard";
 import Log from "./components/Log";
 import GameOver from "./components/GameOver";
 import { useState } from "react";
+import { WINNING_COMBINATIONS } from "./winningCombinations";
 
 const PLAYERS = {
   X: "Player 1",
@@ -20,7 +21,7 @@ function deriveGameBoard(gameTurns) {
   for (const turn of gameTurns) {
     const { square, player } = turn;
     const { row, col } = square;
-    gameBoard[col][row] = player;
+    gameBoard[row][col] = player;
   }
   return gameBoard;
 }
@@ -33,10 +34,32 @@ function deriveActivePlayer(gameTurns) {
   return activePlayer;
 }
 
+function deriveWinner(gameBoard, players) {
+  let winner;
+  for (const combination of WINNING_COMBINATIONS) {
+    const firstWinSquareSymbol =
+      gameBoard[combination[0].row][combination[0].column];
+    const secondWinSquareSymbol =
+      gameBoard[combination[1].row][combination[1].column];
+    const thirdWinSquareSymbol =
+      gameBoard[combination[2].row][combination[2].column];
+
+    if (
+      firstWinSquareSymbol === secondWinSquareSymbol &&
+      secondWinSquareSymbol === thirdWinSquareSymbol
+    ) {
+      winner = players[firstWinSquareSymbol];
+    }
+  }
+
+  return winner;
+}
+
 function App() {
   const [players, setPlayers] = useState(PLAYERS);
   const [gameTurns, setGameTurns] = useState([]);
   const gameBoard = deriveGameBoard(gameTurns);
+  const winner = deriveWinner(gameBoard, players);
   const activePlayer = deriveActivePlayer(gameTurns);
 
   function handleNameChange(symbol, newPlayer) {
@@ -49,16 +72,20 @@ function App() {
   }
 
   function handleSelectSquare(rowIndex, colIndex) {
-    setGameTurns((prevGameTurns) => [
-      {
-        square: {
-          row: rowIndex,
-          col: colIndex,
+    setGameTurns((prevGameTurns) => {
+      const currPlayer = deriveActivePlayer(prevGameTurns);
+      const updatedGameTurns = [
+        {
+          square: {
+            row: rowIndex,
+            col: colIndex,
+          },
+          player: currPlayer,
         },
-        player: activePlayer,
-      },
-      ...prevGameTurns,
-    ]);
+        ...prevGameTurns,
+      ];
+      return updatedGameTurns;
+    });
   }
 
   return (
@@ -79,9 +106,9 @@ function App() {
           />
         </ol>
         <GameBoard board={gameBoard} onSelectSquare={handleSelectSquare} />
-        <Log />
-        <GameOver />
       </div>
+        <Log gameTurns={gameTurns}/>
+        <GameOver />
     </main>
   );
 }
