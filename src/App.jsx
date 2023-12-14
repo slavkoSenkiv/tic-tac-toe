@@ -17,7 +17,7 @@ const INITIAL_GAME_BOARD = [
 
 function deriveGameBoard(gameTurns) {
   let gameBoard = [...INITIAL_GAME_BOARD.map((innerArr) => [...innerArr])];
-  for (const turn in gameTurns) {
+  for (const turn of gameTurns) {
     const { square, player } = turn;
     const { row, col } = square;
     gameBoard[col][row] = player;
@@ -25,11 +25,19 @@ function deriveGameBoard(gameTurns) {
   return gameBoard;
 }
 
+function deriveActivePlayer(gameTurns) {
+  let activePlayer = "X";
+  if (gameTurns.length > 0 && gameTurns[0].player === "X") {
+    activePlayer = "O";
+  }
+  return activePlayer;
+}
+
 function App() {
   const [players, setPlayers] = useState(PLAYERS);
   const [gameTurns, setGameTurns] = useState([]);
   const gameBoard = deriveGameBoard(gameTurns);
-  const [activePlayer, setActivePlayer] = useState("X");
+  const activePlayer = deriveActivePlayer(gameTurns);
 
   function handleNameChange(symbol, newPlayer) {
     setPlayers((prevPlayers) => {
@@ -41,11 +49,16 @@ function App() {
   }
 
   function handleSelectSquare(rowIndex, colIndex) {
-    setActivePlayer((currActivePlayer) => {
-      return currActivePlayer === "X" ? "O" : "X";
-    });
-
-    //stopped here, need to create derive active player function first
+    setGameTurns((prevGameTurns) => [
+      {
+        square: {
+          row: rowIndex,
+          col: colIndex,
+        },
+        player: activePlayer,
+      },
+      ...prevGameTurns,
+    ]);
   }
 
   return (
