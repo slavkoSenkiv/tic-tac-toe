@@ -1,14 +1,13 @@
-export default function Log({ turns }) {
+export default function Log({ gameTurns }) {
   return (
     <ol id="log">
-      {turns.map((turn) => (
+      {gameTurns.map((turn) => (
         <li
-          className={turns.indexOf(turn) === 0 ? "highlighted" : undefined}
           key={`${turn.square.row}${turn.square.col}`}
+          className={gameTurns.indexOf(turn) === 0 ? "highlighted" : undefined}
         >
-          {`player ${turn.player} selected 
-          ${turn.square.row + 1} row & 
-          ${turn.square.col + 1} column`}
+          player {turn.player} row {turn.square.row + 1} col{" "}
+          {turn.square.col + 1}
         </li>
       ))}
     </ol>

@@ -2,9 +2,8 @@ import Player from "./components/Player";
 import GameBoard from "./components/GameBoard";
 import Log from "./components/Log";
 import GameOver from "./components/GameOver";
-import { WINNING_COMBINATIONS } from "./winningCombinations";
-import React from "react";
 import { useState } from "react";
+import { WINNING_COMBINATIONS } from "./winningCombinations";
 
 const PLAYERS = {
   X: "Player 1",
@@ -28,31 +27,29 @@ function deriveGameBoard(gameTurns) {
 }
 
 function deriveActivePlayer(gameTurns) {
-  let currPlayer = "X";
+  let activePlayer = "X";
   if (gameTurns.length > 0 && gameTurns[0].player === "X") {
-    currPlayer = "O";
+    activePlayer = "O";
   }
-  return currPlayer;
+  return activePlayer;
 }
 
 function deriveWinner(gameBoard, players) {
   let winner;
-
   for (const combination of WINNING_COMBINATIONS) {
-    const firstSquareSymbol =
+    const firstWinSquareSymbol =
       gameBoard[combination[0].row][combination[0].column];
-    const secondSquareSymbol =
+    const secondWinSquareSymbol =
       gameBoard[combination[1].row][combination[1].column];
-    const thirdSquareSymbol =
+    const thirdWinSquareSymbol =
       gameBoard[combination[2].row][combination[2].column];
 
     if (
-      firstSquareSymbol &&
-      firstSquareSymbol === secondSquareSymbol &&
-      secondSquareSymbol === thirdSquareSymbol
+      firstWinSquareSymbol &&
+      firstWinSquareSymbol === secondWinSquareSymbol &&
+      secondWinSquareSymbol === thirdWinSquareSymbol
     ) {
-      winner = players[firstSquareSymbol];
-      break;
+      winner = players[firstWinSquareSymbol];
     }
   }
 
@@ -61,17 +58,32 @@ function deriveWinner(gameBoard, players) {
 
 function App() {
   const [players, setPlayers] = useState(PLAYERS);
-  const [gameTurns, setGameturns] = useState([]);
-  const activePlayer = deriveActivePlayer(gameTurns);
+  const [gameTurns, setGameTurns] = useState([]);
   const gameBoard = deriveGameBoard(gameTurns);
   const winner = deriveWinner(gameBoard, players);
-  let hasDraw = gameTurns.length === 9 && !winner;
+  const activePlayer = deriveActivePlayer(gameTurns);
+  let isDraw = gameTurns.length === 9 && !winner;
+
+  function handleNameChange(symbol, newPlayer) {
+    setPlayers((prevPlayers) => {
+      return {
+        ...prevPlayers,
+        [symbol]: newPlayer,
+      };
+    });
+  }
 
   function handleSelectSquare(rowIndex, colIndex) {
-    setGameturns((prevGameTurns) => {
+    setGameTurns((prevGameTurns) => {
       const currPlayer = deriveActivePlayer(prevGameTurns);
       const updatedGameTurns = [
-        { square: { col: colIndex, row: rowIndex }, player: currPlayer },
+        {
+          square: {
+            row: rowIndex,
+            col: colIndex,
+          },
+          player: currPlayer,
+        },
         ...prevGameTurns,
       ];
       return updatedGameTurns;
@@ -79,16 +91,7 @@ function App() {
   }
 
   function handleRestart() {
-    setGameturns([]);
-  }
-
-  function handlePlayerNameChange(symbol, newName) {
-    setPlayers((prevPlayers) => {
-      return {
-        ...prevPlayers,
-        [symbol]: newName,
-      };
-    });
+    setGameTurns([]);
   }
 
   return (
@@ -98,22 +101,22 @@ function App() {
           <Player
             initialName={PLAYERS.X}
             symbol="X"
+            onNameChange={handleNameChange}
             isActive={activePlayer === "X"}
-            onChangeName={handlePlayerNameChange}
           />
           <Player
             initialName={PLAYERS.O}
             symbol="O"
+            onNameChange={handleNameChange}
             isActive={activePlayer === "O"}
-            onChangeName={handlePlayerNameChange}
           />
         </ol>
-        {(winner || hasDraw) && (
+        {(winner || isDraw) && (
           <GameOver winner={winner} onRestart={handleRestart} />
         )}
-        <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} />
+        <GameBoard board={gameBoard} onSelectSquare={handleSelectSquare} />
       </div>
-      <Log turns={gameTurns} />
+      <Log gameTurns={gameTurns} />
     </main>
   );
 }
