@@ -45,6 +45,7 @@ function deriveWinner(gameBoard, players) {
       gameBoard[combination[2].row][combination[2].column];
 
     if (
+      firstWinSquareSymbol &&
       firstWinSquareSymbol === secondWinSquareSymbol &&
       secondWinSquareSymbol === thirdWinSquareSymbol
     ) {
@@ -61,6 +62,7 @@ function App() {
   const gameBoard = deriveGameBoard(gameTurns);
   const winner = deriveWinner(gameBoard, players);
   const activePlayer = deriveActivePlayer(gameTurns);
+  let isDraw = gameTurns.length === 9 && !winner;
 
   function handleNameChange(symbol, newPlayer) {
     setPlayers((prevPlayers) => {
@@ -88,6 +90,10 @@ function App() {
     });
   }
 
+  function handleRestart() {
+    setGameTurns([]);
+  }
+
   return (
     <main>
       <div id="game-container">
@@ -105,10 +111,12 @@ function App() {
             isActive={activePlayer === "O"}
           />
         </ol>
+        {(winner || isDraw) && (
+          <GameOver winner={winner} onRestart={handleRestart} />
+        )}
         <GameBoard board={gameBoard} onSelectSquare={handleSelectSquare} />
       </div>
-        <Log gameTurns={gameTurns}/>
-        <GameOver />
+      <Log gameTurns={gameTurns} />
     </main>
   );
 }
